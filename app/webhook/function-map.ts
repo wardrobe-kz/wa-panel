@@ -1,4 +1,4 @@
-import { sendWhatsAppMessage } from "../api/sendMessage/route";
+import { sendWhatsAppMessage } from "../api/sendMessage/functions";
 
 type ActionFunction = (data: any) => Promise<void>;
 
