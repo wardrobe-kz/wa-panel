@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     return new NextResponse(null, { status: 401 });
   }
   const webhookBody = JSON.parse(rawRequestBody) as WebHookRequest;
-  console.log("webhookBody", webhookBody);
+  console.log("webhookBody", JSON.stringify(webhookBody, null, 2));
   if (webhookBody.entry.length > 0) {
     const supabase = createServiceClient();
     let { error } = await supabase.from(DBTables.Webhook).insert(
