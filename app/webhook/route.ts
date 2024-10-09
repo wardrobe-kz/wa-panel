@@ -9,6 +9,7 @@ import {
   updateBroadCastReplyStatus,
   updateBroadCastStatus,
 } from "./bulk-send-events";
+import { functionMap } from "./function-map";
 
 export const revalidate = 0;
 
@@ -91,6 +92,26 @@ export async function POST(request: NextRequest) {
               message.type === "document"
             ) {
               await downloadMedia(message);
+            } else if (message.type === "button" && message.button) {
+              try {
+                const payload = JSON.parse(message.button.payload);
+                if (
+                  payload.action &&
+                  typeof payload.action === "string" &&
+                  payload.action in functionMap
+                ) {
+                  await functionMap[payload.action](payload.data);
+                } else {
+                  console.warn(
+                    `Unknown action or invalid payload: ${message.button.payload}`
+                  );
+                }
+              } catch (error) {
+                console.error(
+                  `Error parsing button payload: ${message.button.payload}`,
+                  error
+                );
+              }
             }
           }
           await updateBroadCastReplyStatus(messages);
