@@ -100,7 +100,10 @@ export async function POST(request: NextRequest) {
                   typeof payload.action === "string" &&
                   payload.action in functionMap
                 ) {
-                  await functionMap[payload.action](payload.data);
+                  await functionMap[payload.action]({
+                    ...payload.data,
+                    wa_id: message.from,
+                  });
                 } else {
                   console.warn(
                     `Unknown action or invalid payload: ${message.button.payload}`
