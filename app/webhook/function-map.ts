@@ -1,4 +1,5 @@
 import { sendWhatsAppMessage } from "../api/sendMessage/functions";
+import { getOpenAIResponse } from "./openai";
 
 type ActionFunction = (data: any) => Promise<void>;
 
@@ -41,6 +42,20 @@ async function enableSmartPrice(data: {
   }
 }
 
+export async function handleOpenAIResponse(data: {
+  wa_id: string;
+  message: string;
+}): Promise<void> {
+  console.log(`Handling OpenAI response for user: ${data.wa_id}`);
+  try {
+    const response = await getOpenAIResponse(data.message);
+    await sendWhatsAppMessage(data.wa_id, response, null, null, null);
+  } catch (error) {
+    console.error("Error in handleOpenAIResponse:", error);
+  }
+}
+
 export const functionMap: FunctionMap = {
   enableSmartPrice: enableSmartPrice,
+  handleOpenAIResponse: handleOpenAIResponse,
 };

@@ -5,7 +5,6 @@ import {
   TextParameter,
 } from "@/types/message-template-request";
 import { MessageTemplateComponent } from "@/types/message-template";
-
 type Media = {
   id?: string;
   filename?: string;
@@ -48,7 +47,6 @@ function regexSearchTextReplace(
     const varIndex = Number.parseInt(headerVar[1]) - 1;
     const replacementText = replacement[varIndex].text;
     if (replacementText) {
-      console.log("input", input, headerVar[0], replacementText);
       input = input.replace(headerVar[0], replacementText);
     }
   }
@@ -69,7 +67,6 @@ function replaceVarsInTemplate(
               c.text,
               headerVarValue.parameters as { text: string }[]
             );
-            console.log("c.text", c.text);
           } else if (
             c.format === "IMAGE" &&
             headerVarValue.parameters &&
@@ -98,7 +95,6 @@ function replaceVarsInTemplate(
             c.text,
             bodyVarValue.parameters as TextParameter[]
           );
-          console.log("c.text", c.text);
         }
         break;
       case "BUTTONS":
@@ -253,13 +249,12 @@ export async function sendWhatsAppMessage(
     replaceVarsInTemplate(templateComponents, payload.template.components);
     msgToPut.template.components = templateComponents;
   }
-  const supabaseResponse = await supabase.from(DBTables.Messages).insert({
+  await supabase.from(DBTables.Messages).insert({
     message: msgToPut,
     wam_id: wamId,
     chat_id: Number.parseInt(response.contacts[0].wa_id),
     media_url: mediaUrl,
   });
-  console.log(supabaseResponse);
 
   let { error } = await supabase
     .from(DBTables.Contacts)

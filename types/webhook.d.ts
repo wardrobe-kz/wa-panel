@@ -15,6 +15,9 @@ export type WebhookMessage = {
   button?: {
     payload: string;
   };
+  text?: {
+    body: string;
+  };
 };
 
 export type WebhookStatus = {

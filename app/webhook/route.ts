@@ -9,7 +9,7 @@ import {
   updateBroadCastReplyStatus,
   updateBroadCastStatus,
 } from "./bulk-send-events";
-import { functionMap } from "./function-map";
+import { functionMap, handleOpenAIResponse } from "./function-map";
 
 export const revalidate = 0;
 
@@ -114,6 +114,20 @@ export async function POST(request: NextRequest) {
                   `Error parsing button payload: ${message.button.payload}`,
                   error
                 );
+              }
+            } else if (message.type === "text" && message.text) {
+              const test_users = [
+                "77770765776",
+                "77782550525",
+                "77752916542",
+                "77051112457",
+                "77054751501",
+              ];
+              if (test_users.includes(message.from)) {
+                handleOpenAIResponse({
+                  wa_id: message.from,
+                  message: message.text.body,
+                });
               }
             }
           }
