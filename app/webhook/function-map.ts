@@ -46,9 +46,12 @@ export async function handleOpenAIResponse(data: {
   wa_id: string;
   message: string;
 }): Promise<void> {
-  console.log(`Handling OpenAI response for user: ${data.wa_id}`);
+  console.log(
+    `Handling OpenAI response for user: ${data.wa_id}, message: ${data.message}`
+  );
   try {
     const response = await getOpenAIResponse(data.message);
+    console.log(`OpenAI response for user: ${data.wa_id} is: ${response}`);
     await sendWhatsAppMessage(data.wa_id, response, null, null, null);
   } catch (error) {
     console.error("Error in handleOpenAIResponse:", error);
