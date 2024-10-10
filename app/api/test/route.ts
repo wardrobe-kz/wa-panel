@@ -21,7 +21,7 @@ export async function GET(request: Request) {
   }
 }
 
-export async function sendBulkTemplateMessages() {
+async function sendBulkTemplateMessages() {
   try {
     // Read the JSON file
     const jsonPath = path.join(process.cwd(), "app/api/test/users.json");
