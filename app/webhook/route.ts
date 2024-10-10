@@ -124,10 +124,14 @@ export async function POST(request: NextRequest) {
                 "77054751501",
               ];
               if (test_users.includes(message.from)) {
-                handleOpenAIResponse({
-                  wa_id: message.from,
-                  message: message.text.body,
-                });
+                try {
+                  await handleOpenAIResponse({
+                    wa_id: message.from,
+                    message: message.text.body,
+                  });
+                } catch (error) {
+                  console.error("Error in handleOpenAIResponse:", error);
+                }
               }
             }
           }
