@@ -9,7 +9,8 @@ import {
   updateBroadCastReplyStatus,
   updateBroadCastStatus,
 } from "./bulk-send-events";
-import { functionMap, handleOpenAIResponse } from "./function-map";
+import { functionMap } from "./function-map";
+import { sendWhatsAppMessage } from "../api/sendMessage/functions";
 
 export const revalidate = 0;
 
@@ -116,23 +117,30 @@ export async function POST(request: NextRequest) {
                 );
               }
             } else if (message.type === "text" && message.text) {
-              const test_users = [
-                "77770765776",
-                "77782550525",
-                "77752916542",
-                "77051112457",
-                "77054751501",
-              ];
-              if (test_users.includes(message.from)) {
-                try {
-                  await handleOpenAIResponse({
-                    wa_id: message.from,
-                    message: message.text.body,
-                  });
-                } catch (error) {
-                  console.error("Error in handleOpenAIResponse:", error);
-                }
-              }
+              await sendWhatsAppMessage(
+                message.from,
+                "Этот чат только для рассылок, если у вас есть вопросы, пишите нам на этот номер +7 708 983 69 33",
+                null,
+                null,
+                null
+              );
+              // const test_users = [
+              //   "77770765776",
+              //   "77782550525",
+              //   "77752916542",
+              //   "77051112457",
+              //   "77054751501",
+              // ];
+              // if (test_users.includes(message.from)) {
+              //   try {
+              //     await handleOpenAIResponse({
+              //       wa_id: message.from,
+              //       message: message.text.body,
+              //     });
+              //   } catch (error) {
+              //     console.error("Error in handleOpenAIResponse:", error);
+              //   }
+              // }
             }
           }
           await updateBroadCastReplyStatus(messages);
